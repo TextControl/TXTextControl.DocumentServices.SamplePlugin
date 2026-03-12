@@ -15,7 +15,7 @@ namespace TXTextControl.DocumentServices.SamplePlugin;
 public class HelloPlugin : IPlugin {
    public string Name => "Text Control DS Server Sample Plugin";
    public string Description => "Adds a /plugin/hello endpoint and logs requests.";
-   public string Version => "1.0.0";
+   public string Version => "2.0.0";
 
    /// <summary>
    /// The base path of the plugin's web interface. This is used to create a 
