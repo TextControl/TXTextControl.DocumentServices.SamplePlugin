@@ -19,7 +19,7 @@ public class DocumentProcessingController : ControllerBase {
    }
 
    [HttpPost]
-   public async Task<IActionResult> Convert([FromBody] ConvertDocumentRequest request, CancellationToken cancellationToken) {
+   public async Task<IActionResult> Convert([FromBody] ConvertDocumentRequest request) {
       if (!TryDecodeBase64(request.Document, out var documentBytes, out var badRequest)) {
          return badRequest;
       }
@@ -32,26 +32,25 @@ public class DocumentProcessingController : ControllerBase {
          documentBytes,
          returnFormat,
          request.FlattenFormFields,
-         cancellationToken);
+         HttpContext.RequestAborted);
 
       return File(convertedDocument, GetContentType(returnFormat), GetFileName("converted", returnFormat));
    }
 
    [HttpPost]
-   public async Task<IActionResult> GetDocumentInfo([FromBody] Base64DocumentRequest request, CancellationToken cancellationToken) {
+   public async Task<IActionResult> GetDocumentInfo([FromBody] Base64DocumentRequest request) {
       if (!TryDecodeBase64(request.Document, out var documentBytes, out var badRequest)) {
          return badRequest;
       }
 
-      DocumentInfo documentInfo = await m_processingService.GetDocumentInfoAsync(documentBytes, cancellationToken);
+      DocumentInfo documentInfo = await m_processingService.GetDocumentInfoAsync(documentBytes, HttpContext.RequestAborted);
       return Ok(documentInfo);
    }
 
    [HttpGet]
    public async Task<IActionResult> CreateBarcode(
-      [FromQuery] string text = "https://www.textcontrol.com",
-      CancellationToken cancellationToken = default) {
-      byte[] image = await m_processingService.Barcodes.CreateAsync(new BarcodeSettings(text), ct: cancellationToken);
+      [FromQuery] string text = "https://www.textcontrol.com") {
+      byte[] image = await m_processingService.Barcodes.CreateAsync(new BarcodeSettings(text));
       return File(image, "image/png", "barcode.png");
    }
 

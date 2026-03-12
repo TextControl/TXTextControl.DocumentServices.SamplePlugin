@@ -23,8 +23,7 @@ public class DocumentEditorSessionsController : ControllerBase {
    [HttpPost]
    public async Task<IActionResult> LoadDocument(
       [FromQuery] string connectionId,
-      [FromBody] LoadDocumentRequest request,
-      CancellationToken cancellationToken) {
+      [FromBody] LoadDocumentRequest request) {
       if (!TryGetSession(connectionId, out var session, out var notFoundResult)) {
          return notFoundResult;
       }
@@ -38,7 +37,7 @@ public class DocumentEditorSessionsController : ControllerBase {
       }
 
       LoadOptions loadOptions = LoadOptions.FromDocumentFormat(documentFormat, documentBytes);
-      await session.LoadAsync(loadOptions, cancellationToken);
+      await session.LoadAsync(loadOptions, HttpContext.RequestAborted);
 
       return Ok(new {
          ConnectionId = connectionId,
@@ -49,13 +48,12 @@ public class DocumentEditorSessionsController : ControllerBase {
    [HttpPost]
    public async Task<IActionResult> SetParagraphBackColor(
       [FromQuery] string connectionId,
-      [FromQuery] string color = "#FFF59D",
-      CancellationToken cancellationToken = default) {
+      [FromQuery] string color = "#FFF59D") {
       if (!TryGetSession(connectionId, out var session, out var notFoundResult)) {
          return notFoundResult;
       }
 
-      await session.Selection.ParagraphFormat.SetBackColorAsync(color, cancellationToken);
+      await session.Selection.ParagraphFormat.SetBackColorAsync(color);
 
       return Ok(new {
          ConnectionId = connectionId,
@@ -65,30 +63,28 @@ public class DocumentEditorSessionsController : ControllerBase {
 
    [HttpGet]
    public async Task<IActionResult> GetCurrentApplicationField(
-      [FromQuery] string connectionId,
-      CancellationToken cancellationToken = default) {
+      [FromQuery] string connectionId) {
       if (!TryGetSession(connectionId, out var session, out var notFoundResult)) {
          return notFoundResult;
       }
 
-      IApplicationField? applicationField = await session.ApplicationFields.GetItemAsync(cancellationToken);
+      IApplicationField? applicationField = await session.ApplicationFields.GetItemAsync();
       if (applicationField is null) {
          return NotFound("No application field is available at the current input position.");
       }
 
       return Ok(new {
          ConnectionId = connectionId,
-         Name = await applicationField.GetNameAsync(cancellationToken),
-         TypeName = await applicationField.GetTypeNameAsync(cancellationToken),
-         Text = await applicationField.GetTextAsync(cancellationToken)
+         Name = await applicationField.GetNameAsync(),
+         TypeName = await applicationField.GetTypeNameAsync(),
+         Text = await applicationField.GetTextAsync()
       });
    }
 
    [HttpGet]
    public async Task<IActionResult> SaveDocument(
       [FromQuery] string connectionId,
-      [FromQuery] string format = "TX",
-      CancellationToken cancellationToken = default) {
+      [FromQuery] string format = "TX") {
       if (!TryGetSession(connectionId, out var session, out var notFoundResult)) {
          return notFoundResult;
       }
@@ -97,7 +93,7 @@ public class DocumentEditorSessionsController : ControllerBase {
          return BadRequest($"Unknown document format '{format}'.");
       }
 
-      SavedDocument savedDocument = await session.SaveAsync(new SaveOptions(documentFormat), cancellationToken);
+      SavedDocument savedDocument = await session.SaveAsync(new SaveOptions(documentFormat), HttpContext.RequestAborted);
       return File(savedDocument.Content, GetContentType(savedDocument.Format), GetFileName("session-document", savedDocument.Format));
    }
 
