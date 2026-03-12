@@ -1,6 +1,6 @@
 ﻿//-------------------------------------------------------------------------------------------------------------
 // module:          TXTextControl.DocumentServices.SamplePlugin
-// copyright:       © 2025 Text Control GmbH
+// copyright:       © 2026 Text Control GmbH
 // author:          T. Kummerow
 //-------------------------------------------------------------------------------------------------------------
 using Microsoft.AspNetCore.Mvc;

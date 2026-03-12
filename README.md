@@ -6,18 +6,18 @@ This repository contains a sample plugin for [Text Control DS Server](https://ds
 - Register custom middleware
 - Read configuration settings
 - Register plugin-specific services via dependency injection
-- Consume the new DS Server DI services `IDocumentProcessingService` and `IDocumentEditorSessionService`
+- Consume the DS Server DI services `IDocumentProcessingService` and `IDocumentEditorSessionService`
 - Serve a simple HTML configuration page
 
-## What It Does
+## 🧩 What It Does
 
-The sample plugin now exposes three groups of examples:
+The sample plugin exposes three groups of examples:
 
 - `/plugin/hello` shows a minimal controller with plugin-owned state and middleware logging
 - `/plugin/document-processing/*` shows how a plugin controller can use `IDocumentProcessingService`
 - `/plugin/document-editor-sessions/*` shows how a plugin controller can work with active editor sessions through `IDocumentEditorSessionService`
 
-## Included Service Examples
+## ✨ Included Service Examples
 
 ### 1. `IDocumentProcessingService`
 
@@ -79,7 +79,7 @@ Content-Type: application/json
 }
 ```
 
-## Plugin UI
+## ⚙️ Plugin UI
 
 The plugin also provides a basic web-based configuration page at:
 
@@ -89,7 +89,7 @@ http://<your-ds-server>/plugin-ui/sample-plugin
 
 This page is rendered using `MapGet(...)` in the plugin's `ConfigureMiddleware` method, demonstrating how to serve a simple HTML UI from a plugin.
 
-## Getting Started
+## 🚀 Getting Started
 
 1. Build the plugin:
 
@@ -118,7 +118,7 @@ Plugins/
 
 The current sample project in this repository targets `.NET 10` so it matches the local abstractions package that is included for reference.
 
-## Try It Out
+## 🧪 Try It Out
 
 After deployment, try the minimal sample endpoint:
 
@@ -128,7 +128,7 @@ GET http://<your-ds-server>/plugin/hello
 
 Then test the processing and editor-session samples with base64-encoded documents and, for the editor endpoints, a valid DS Server editor `connectionId`.
 
-## Source Structure
+## ⚒️ Source Structure
 
 - `HelloPlugin.cs` - Implements `IPlugin`, middleware setup and the sample plugin UI
 - `Controllers/HelloController.cs` - Minimal greeting endpoint
@@ -137,10 +137,10 @@ Then test the processing and editor-session samples with base64-encoded document
 - `Services/GreetingState.cs` - Singleton service registered by the plugin
 - `TXTextControl.DocumentServices.Plugin.Abstractions/` - Reference copy of the public plugin abstractions package
 
-## License
+## 📄 License
 
 This sample is provided under the MIT License. See [LICENSE.md](./LICENSE.md) for details.
 
-## About Text Control DS Server
+## 📣 About Text Control DS Server
 
 [Text Control DS Server](https://www.dsserver.io/) is a powerful on-premise backend for generating, viewing, editing, and signing documents — complete with extensive mail merge and reporting capabilities — accessible via REST APIs or integrated custom logic through plugins like this one. [Try it out today](https://www.dsserver.io/getting-started/) and see how it can enhance your document processing workflows!
