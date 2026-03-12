@@ -1,13 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TXTextControl.DocumentServices.Plugin.Abstractions\TXTextControl.DocumentServices.Plugin.Abstractions.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TXTextControl.DocumentServices.Plugin.Abstractions">
+      <HintPath>$(MSBuildProjectDirectory)\TXTextControl.DocumentServices.Plugin.Abstractions\lib\net10.0\TXTextControl.DocumentServices.Plugin.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

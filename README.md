@@ -6,19 +6,90 @@ This repository contains a sample plugin for [Text Control DS Server](https://ds
 - Register custom middleware
 - Read configuration settings
 - Register plugin-specific services via dependency injection
+- Consume the new DS Server DI services `IDocumentProcessingService` and `IDocumentEditorSessionService`
 - Serve a simple HTML configuration page
 
-## 🧩 What It Does
+## What It Does
 
-The sample plugin:
+The sample plugin now exposes three groups of examples:
 
-- Registers a controller at `/plugin/hello`
-- Returns a greeting text from configuration
-- Logs each request to `/plugin/hello` using custom middleware
-- Uses `IPlugin` lifecycle methods for setup and logging
-- Provides a basic HTML configuration page at `/plugin-ui/sample-plugin` using `MapGet`
+- `/plugin/hello` shows a minimal controller with plugin-owned state and middleware logging
+- `/plugin/document-processing/*` shows how a plugin controller can use `IDocumentProcessingService`
+- `/plugin/document-editor-sessions/*` shows how a plugin controller can work with active editor sessions through `IDocumentEditorSessionService`
 
-## 🚀 Getting Started
+## Included Service Examples
+
+### 1. `IDocumentProcessingService`
+
+The sample [`DocumentProcessingController`](./Controllers/DocumentProcessingController.cs) demonstrates:
+
+- Converting an uploaded base64 document to another DS Server return format
+- Retrieving document metadata and merge information
+- Generating a barcode image through the barcode sub API
+
+Available endpoints:
+
+```text
+POST /plugin/document-processing/convert
+POST /plugin/document-processing/getdocumentinfo
+GET  /plugin/document-processing/createbarcode?text=...
+```
+
+Example request:
+
+```http
+POST /plugin/document-processing/convert HTTP/1.1
+Content-Type: application/json
+
+{
+  "document": "<base64 document>",
+  "returnFormat": "PDF",
+  "flattenFormFields": true
+}
+```
+
+### 2. `IDocumentEditorSessionService`
+
+The sample [`DocumentEditorSessionsController`](./Controllers/DocumentEditorSessionsController.cs) demonstrates:
+
+- Resolving a live editor session by `connectionId`
+- Loading a base64 document into the current editor session
+- Changing the current paragraph background color in the active selection
+- Reading the application field at the current input position
+- Saving the current editor session back to a selected document format
+
+Available endpoints:
+
+```text
+POST /plugin/document-editor-sessions/loaddocument?connectionId=<id>
+POST /plugin/document-editor-sessions/setparagraphbackcolor?connectionId=<id>&color=%23FFF59D
+GET  /plugin/document-editor-sessions/getcurrentapplicationfield?connectionId=<id>
+GET  /plugin/document-editor-sessions/savedocument?connectionId=<id>&format=PDF
+```
+
+Example request:
+
+```http
+POST /plugin/document-editor-sessions/loaddocument?connectionId=<id> HTTP/1.1
+Content-Type: application/json
+
+{
+  "document": "<base64 document>",
+  "format": "HTML"
+}
+```
+
+## Plugin UI
+
+The plugin also provides a basic web-based configuration page at:
+
+```text
+http://<your-ds-server>/plugin-ui/sample-plugin
+```
+
+This page is rendered using `MapGet(...)` in the plugin's `ConfigureMiddleware` method, demonstrating how to serve a simple HTML UI from a plugin.
+
+## Getting Started
 
 1. Build the plugin:
 
@@ -26,10 +97,10 @@ The sample plugin:
 dotnet build
 ```
 
-2. Create a subfolder inside the `Plugins/` folder of your DS Server installation (e.g. `Plugins/SamplePlugin/`).
+2. Create a subfolder inside the `Plugins/` folder of your DS Server installation (for example `Plugins/SamplePlugin/`).
 3. Copy the resulting `TXTextControl.DocumentServices.SamplePlugin.dll` into that subfolder:
 
-```plaintext
+```text
 Plugins/
 └── SamplePlugin/
     └── TXTextControl.DocumentServices.SamplePlugin.dll
@@ -45,36 +116,31 @@ Plugins/
 
 5. Restart DS Server.
 
-## 🧪 Try It Out
+The current sample project in this repository targets `.NET 10` so it matches the local abstractions package that is included for reference.
 
-After deployment, you can access the plugin endpoint:
+## Try It Out
 
-```perl
+After deployment, try the minimal sample endpoint:
+
+```http
 GET http://<your-ds-server>/plugin/hello
 ```
 
-You should receive the configured greeting string, and the request will be logged by the plugin's middleware.
+Then test the processing and editor-session samples with base64-encoded documents and, for the editor endpoints, a valid DS Server editor `connectionId`.
 
-## ⚙️ Plugin UI
+## Source Structure
 
-The plugin also provides a basic web-based configuration page at:
+- `HelloPlugin.cs` - Implements `IPlugin`, middleware setup and the sample plugin UI
+- `Controllers/HelloController.cs` - Minimal greeting endpoint
+- `Controllers/DocumentProcessingController.cs` - Sample usage of `IDocumentProcessingService`
+- `Controllers/DocumentEditorSessionsController.cs` - Sample usage of `IDocumentEditorSessionService`
+- `Services/GreetingState.cs` - Singleton service registered by the plugin
+- `TXTextControl.DocumentServices.Plugin.Abstractions/` - Reference copy of the public plugin abstractions package
 
-```text
-http://<your-ds-server>/plugin-ui/sample-plugin
-```
-
-This page is rendered using `MapGet(...)` in the plugin's `ConfigureMiddleware` method, demonstrating how to serve a simple HTML UI from a plugin.
-
-## ⚒️ Source Structure
-
-* `HelloPlugin.cs` — Implements the IPlugin interface
-* `Controllers/HelloController.cs` — A minimal API controller
-* `Services/GreetingState.cs` — A singleton service registered by the plugin
-
-## 📄 License
+## License
 
 This sample is provided under the MIT License. See [LICENSE.md](./LICENSE.md) for details.
 
-## 📣 About Text Control DS Server
+## About Text Control DS Server
 
 [Text Control DS Server](https://www.dsserver.io/) is a powerful on-premise backend for generating, viewing, editing, and signing documents — complete with extensive mail merge and reporting capabilities — accessible via REST APIs or integrated custom logic through plugins like this one. [Try it out today](https://www.dsserver.io/getting-started/) and see how it can enhance your document processing workflows!
