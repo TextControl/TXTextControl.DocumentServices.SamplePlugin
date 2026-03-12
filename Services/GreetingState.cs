@@ -6,5 +6,5 @@
 namespace TXTextControl.DocumentServices.SamplePlugin.Services;
 
 public class GreetingState {
-	public string Greeting { get; set; } = "Hello (default)";
+   public string Greeting { get; set; } = "Hello (default)";
 }

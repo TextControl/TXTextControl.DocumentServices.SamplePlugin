@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="TXTextControl.DocumentServices.Plugin.Abstractions">
-      <HintPath>$(MSBuildProjectDirectory)\TXTextControl.DocumentServices.Plugin.Abstractions\lib\net10.0\TXTextControl.DocumentServices.Plugin.Abstractions.dll</HintPath>
-    </Reference>
+    <PackageReference Include="TXTextControl.DocumentServices.Plugin.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

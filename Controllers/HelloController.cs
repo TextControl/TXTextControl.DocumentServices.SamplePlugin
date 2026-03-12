@@ -11,12 +11,12 @@ namespace TXTextControl.DocumentServices.SamplePlugin.Controllers;
 [ApiController]
 [Route("plugin/[controller]")]
 public class HelloController : ControllerBase {
-	private readonly GreetingState m_state;
+   private readonly GreetingState m_state;
 
-	public HelloController(GreetingState state) {
-		m_state = state;
-	}
+   public HelloController(GreetingState state) {
+      m_state = state;
+   }
 
-	[HttpGet]
-	public string Get() => m_state.Greeting;
+   [HttpGet]
+   public string Get() => m_state.Greeting;
 }
