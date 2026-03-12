@@ -116,8 +116,6 @@ Plugins/
 
 5. Restart DS Server.
 
-The current sample project in this repository targets `.NET 10` so it matches the local abstractions package that is included for reference.
-
 ## 🧪 Try It Out
 
 After deployment, try the minimal sample endpoint:
