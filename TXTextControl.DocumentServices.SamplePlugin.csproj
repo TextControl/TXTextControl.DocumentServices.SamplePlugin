@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="TXTextControl.DocumentServices.Plugin.Abstractions" Version="5.0.0" />
+    <PackageReference Include="TXTextControl.DocumentServices.Plugin.Abstractions" Version="5.0.1" />
   </ItemGroup>
 
 </Project>
